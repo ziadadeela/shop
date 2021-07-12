@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  isDeleted Boolean @default(false)
+}
+
+model Vendor {
+  id          Int      @id @default(autoincrement())
+  name        String
+  location    String
+  createdAt   DateTime @default(now())
+  //createdBy User @relation(name: "createdBy", fields: [createdById], references: [id])
+  createdById Int
+  updatedAt   DateTime @updatedAt
+  //updatedBy User @relation(name: "updatedBy", fields: [updatedById], references: [id])
+  updatedById Int
+  isDeleted   Boolean  @default(false)
+  items       Item[]
+}
+
+model Category {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  isDeleted   Boolean @default(false)
+  items       Item[]
+}
+
+model Item {
+  id              Int             @id @default(autoincrement())
+  name            String          @db.VarChar(255)
+  description     String?
+  category        Category        @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  storageLocation String //enum?
+  sellingPrice    Decimal
+  purchasingPrice Decimal
+  vendor          Vendor          @relation(fields: [vendorId], references: [id])
+  vendorId        Int
+  createdAt       DateTime        @default(now())
+  //createdBy User @relation(name: "createdBy", fields: [createdById], references: [id])
+  createdById     Int
+  updatedAt       DateTime        @updatedAt
+  //updatedBy User @relation(name: "updatedBy", fields: [updatedById], references: [id])
+  updatedById     Int
+  isDeleted       Boolean         @default(false)
+  itemQuantities  ItemQuantity[]
+  purchasedItems  PurchasedItem[]
+}
+
+model ItemQuantity {
+  id       Int    @id @default(autoincrement())
+  size     String //enum
+  quantity Int
+  item     Item   @relation(fields: [itemId], references: [id])
+  itemId   Int
+}
+
+model Purchase {
+  id             Int             @id @default(autoincrement())
+  date           DateTime        @default(now())
+  isDelivery     Boolean         @default(false)
+  isDeleted      Boolean         @default(false)
+  purchasedItems PurchasedItem[]
+}
+
+model PurchasedItem {
+  id           Int      @id @default(autoincrement())
+  purchase     Purchase @relation(fields: [purchaseId], references: [id])
+  purchaseId   Int
+  item         Item     @relation(fields: [itemId], references: [id])
+  itemId       Int
+  sellingPrice Decimal
+
+  isDeleted Boolean @default(false)
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  type        String //enum
+  notes       String?
+  cost        Decimal
+  createdAt   DateTime @default(now())
+  //createdBy User @relation(name: "createdBy", fields: [createdById], references: [id])
+  createdById Int
+  updatedAt   DateTime @updatedAt
+  //updatedBy User @relation(name: "updatedBy", fields: [updatedById], references: [id])
+  updatedById Int
+  isDeleted   Boolean  @default(false)
+}
