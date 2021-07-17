@@ -26,6 +26,9 @@ export class VendorService {
   getById(id: number): Promise<Vendor | null> {
     return this.prismaService.vendor.findUnique({
       where: { id },
+      include: {
+        items: true,
+      },
     });
   }
 

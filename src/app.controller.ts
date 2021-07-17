@@ -1,20 +1,24 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Body,
-  Put,
-  Delete,
-  Query,
-} from '@nestjs/common';
-import { PrismaService } from './prisma/prisma.service';
+import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import { LocalAuthGuard } from './auth/local-auth.guard';
+import { AuthService } from './auth/auth.service';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 // import { User as UserModel, Post as PostModel, Prisma } from '@prisma/client';
 
 @Controller()
 export class AppController {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private authService: AuthService) {}
 
+  @UseGuards(LocalAuthGuard)
+  @Post('auth/login')
+  async login(@Request() req) {
+    return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  getProfile(@Request() req) {
+    return req.user;
+  }
   // @Get('post/:id')
   // async getPostById(@Param('id') id: string): Promise<PostModel> {
   //   return this.prismaService.post.findUnique({ where: { id: Number(id) } });
