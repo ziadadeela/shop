@@ -2,6 +2,7 @@
 CREATE TABLE `User` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(255) NOT NULL,
+    `username` VARCHAR(50) NOT NULL,
     `isDeleted` BOOLEAN NOT NULL DEFAULT false,
 
     PRIMARY KEY (`id`)
@@ -12,6 +13,7 @@ CREATE TABLE `Vendor` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
     `location` VARCHAR(191) NOT NULL,
+    `notes` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `createdById` INTEGER NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL,
@@ -87,6 +89,7 @@ CREATE TABLE `Expense` (
     `type` VARCHAR(191) NOT NULL,
     `notes` VARCHAR(191),
     `cost` DECIMAL(65, 30) NOT NULL,
+    `date` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `createdById` INTEGER NOT NULL,
     `updatedAt` DATETIME(3) NOT NULL,
